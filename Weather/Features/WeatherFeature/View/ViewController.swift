@@ -91,8 +91,8 @@ class ViewController: UIViewController, WeatherViewProtocol, UIScrollViewDelegat
     var dailyForecastData: [DailyWeatherViewModel] = []
     private var dailyTableViewHeightConstraint: NSLayoutConstraint?
 
-    private var navTitleIsShown = false
-
+    private var navLocationIsShown = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.2, green: 0.6, blue: 0.8, alpha: 1.0)
@@ -328,19 +328,38 @@ class ViewController: UIViewController, WeatherViewProtocol, UIScrollViewDelegat
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let labelFrame = locationLabel.superview?.convert(locationLabel.frame, to: nil),
+        guard let locationFrame = locationLabel.superview?.convert(locationLabel.frame, to: nil),
+              let temperatureFrame = currentTemperatureLabel.superview?.convert(currentTemperatureLabel.frame, to: nil),
               let navBarFrame = navigationController?.navigationBar.frame
         else { return }
         
         let contentOffsetY = scrollView.contentOffset.y
+        let cityName = locationLabel.text ?? ""
+        let temperature = currentTemperatureLabel.text ?? ""
         
-        if contentOffsetY > 0 && labelFrame.maxY <= navBarFrame.maxY && !navTitleIsShown {
-            navigationItem.title = locationLabel.text
-            navTitleIsShown = true
+        let temperatureOffset = temperatureFrame.height / 2
+        
+        if contentOffsetY > 0 && locationFrame.maxY <= navBarFrame.maxY && !navLocationIsShown {
+            navigationItem.title = cityName
+            navLocationIsShown = true
         }
-        else if (contentOffsetY <= 0 || labelFrame.maxY > navBarFrame.maxY) && navTitleIsShown {
-            navigationItem.title = nil
-            navTitleIsShown = false
+        else if (contentOffsetY <= 0 || locationFrame.maxY > navBarFrame.maxY) && navLocationIsShown {
+            if temperatureFrame.maxY - temperatureOffset > navBarFrame.maxY {
+                navigationItem.title = nil
+            } else {
+                navigationItem.title = "\(cityName) • \(temperature)"
+            }
+            navLocationIsShown = false
+        }
+        
+        if contentOffsetY > 0 &&
+           temperatureFrame.maxY - temperatureOffset <= navBarFrame.maxY &&
+           navLocationIsShown {
+            navigationItem.title = "\(cityName) • \(temperature)"
+        }
+        else if temperatureFrame.maxY - temperatureOffset > navBarFrame.maxY &&
+                navLocationIsShown {
+            navigationItem.title = cityName
         }
     }
 }
