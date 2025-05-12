@@ -22,7 +22,7 @@ class DailyForecastTableViewCell: UITableViewCell {
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .lightGray
+        label.textColor = .lightText
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,7 +36,7 @@ class DailyForecastTableViewCell: UITableViewCell {
 
     private let tempRangeLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .white
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +46,7 @@ class DailyForecastTableViewCell: UITableViewCell {
     private let chanceOfRainLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .regular)
-        label.textColor = UIColor(red: 0.7, green: 0.85, blue: 1.0, alpha: 1.0)
+        label.textColor = .lightText
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -77,19 +77,17 @@ class DailyForecastTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             dayDateStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             dayDateStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            dayDateStack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.2),
             
-            iconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: dayDateStack.trailingAnchor, constant: 10),
-            iconImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 40),
-            iconImageView.heightAnchor.constraint(equalToConstant: 40),
+            iconImageView.leadingAnchor.constraint(equalTo: dayDateStack.trailingAnchor, constant: 8),
+            iconImageView.widthAnchor.constraint(equalToConstant: 45),
+            iconImageView.heightAnchor.constraint(equalToConstant: 45),
 
             tempRainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             tempRainStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            tempRainStack.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 10),
-            
-            dayLabel.widthAnchor.constraint(lessThanOrEqualToConstant: contentView.bounds.width * 0.35),
-            tempRangeLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: contentView.bounds.width * 0.25)
+            tempRainStack.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
+            tempRainStack.widthAnchor.constraint(greaterThanOrEqualTo: contentView.widthAnchor, multiplier: 0.35)
         ])
     }
 
