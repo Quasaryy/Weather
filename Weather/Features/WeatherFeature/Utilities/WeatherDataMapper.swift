@@ -10,7 +10,7 @@ import Foundation
 struct WeatherDataMapper {
 
     // MARK: - Public API
-
+    
     static func current(from current: CurrentWeather, location: Location) -> CurrentWeatherViewModel {
         CurrentWeatherViewModel(
             temperature: "\(Int(current.temp_c.rounded()))°C",
@@ -27,21 +27,25 @@ struct WeatherDataMapper {
         let calendar = Calendar.current
         let now = currentDate
         var result: [HourlyWeatherViewModel] = []
-
-        if let today = forecast.forecastday.first {
-            let todayHours = today.hour.filter { h in
-                guard let d = DateFormatter.yyyyMMddHHmm.date(from: h.time) else { return false }
-                return calendar.isDate(d, inSameDayAs: now) && d >= now
-            }
-            result.append(contentsOf: todayHours.map(mapHour))
+        
+        let currentHour = calendar.component(.hour, from: now)
+        
+        guard forecast.forecastday.count >= 2 else { return [] }
+        
+        let today = forecast.forecastday[0]
+        let tomorrow = forecast.forecastday[1]
+        
+        let todayHours = today.hour.filter { hourData in
+            guard let hourDate = DateFormatter.yyyyMMddHHmm.date(from: hourData.time) else { return false }
+            let hour = calendar.component(.hour, from: hourDate)
+            return hour >= currentHour
         }
-
-        if forecast.forecastday.count > 1 {
-            let tomorrow = forecast.forecastday[1]
-            _ = result.count
-            result.append(contentsOf: tomorrow.hour.map(mapHour))
-        }
-        return Array(result.prefix(48))
+        result.append(contentsOf: todayHours.map(mapHour))
+        
+        let tomorrowHours = tomorrow.hour
+        result.append(contentsOf: tomorrowHours.map(mapHour))
+        
+        return result
     }
 
     static func daily(from days: [ForecastDay]) -> [DailyWeatherViewModel] {
