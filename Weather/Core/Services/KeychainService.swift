@@ -50,6 +50,7 @@ class KeychainService: KeychainServiceProtocol {
             try keychain.remove(apiKeyKey)
             return true
         } catch let error {
+            print("KeychainService: Error deleting API Key: \(error.localizedDescription)")
             return false
         }
     }

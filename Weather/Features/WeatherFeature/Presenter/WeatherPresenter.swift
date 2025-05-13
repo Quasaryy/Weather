@@ -53,6 +53,7 @@ extension WeatherPresenter: WeatherInteractorOutputProtocol {
 
     func didFailToUpdateLocation(_ error: LocationError) {
         let message = ErrorTranslator.message(for: .locationError(error))
+        print(message)
         view?.showLoading()
         interactor?.fetchWeatherDataForDefaultLocation()
     }
